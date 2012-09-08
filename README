@@ -1,1 +1,1 @@
-This project was mainly to read in data from my iTunes library. I later added support to store in sqlite3 so that I could run queries.
+This project was created mainly to read in data from my iTunes library. I later added support to store in sqlite3 so that I could run queries. It's a learning project and as such may not have all the polish needed to be a proper library. Take what you like from it.
