@@ -4,7 +4,7 @@ Created on Sep 8, 2012
 @author: btbuxton
 '''
 import unittest
-from itunes.common import PreviousIterator
+from itunes.common import PreviousIterator #@UnresolvedImport
 
 class PreviousIteratorTest(unittest.TestCase):
     def testSimple(self):
