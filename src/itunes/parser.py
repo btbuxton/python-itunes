@@ -45,33 +45,33 @@ class Track(object):
 
 class TracksParser(object):
     track_mapping={
-                  'Name': 'title',
-                  'Artist': 'artist_name',
-                  'Album': 'album_name',
-                  'Album Artist': 'album_artist_name',
-                  'Genre': 'genre_name',
-                  'Total Time': 'total_time',
-                  'Year': 'year',
-                  'Play Count': 'play_count',
-                  'Play Date': 'last_played',
-                  'Persistent ID': 'persistent_id',
-                  'Track Number': 'track_number',
-                  'Disc Number': 'disc_number'
+        'Name': 'title',
+        'Artist': 'artist_name',
+        'Album': 'album_name',
+        'Album Artist': 'album_artist_name',
+        'Genre': 'genre_name',
+        'Total Time': 'total_time',
+        'Year': 'year',
+        'Play Count': 'play_count',
+        'Play Date': 'last_played',
+        'Persistent ID': 'persistent_id',
+        'Track Number': 'track_number',
+        'Disc Number': 'disc_number'
     }
     
     value_converter={
-                     'integer': lambda value: int(value),
-                     'string': lambda value: value,
-                     'date': lambda value: time.strptime(value, '%Y-%m-%dT%H:%M:%SZ'),
-                     'true': lambda value: True,
-                     'false': lambda value: False
+        'integer': lambda value: int(value),
+        'string': lambda value: value,
+        'date': lambda value: time.strptime(value, '%Y-%m-%dT%H:%M:%SZ'),
+        'true': lambda value: True,
+        'false': lambda value: False
     }
     
-    def __init__(self, library_name):
-        self.library_name=library_name
+    def __init__(self, library_file):
+        self._library_file=library_file
         
     def __iter__(self):
-        with open(self.library_name,'r') as stream:
+        with open(self._library_file,'r') as stream:
             parser = PreviousIterator(pulldom.parse(stream))
             while True:
                 value = self._get_key(parser) 
@@ -87,7 +87,6 @@ class TracksParser(object):
                 if track.is_valid():
                     yield track
                 next = self._eat(parser)
-            #print str(next)
             
     def _get_track(self, parser, id):
         track = Track(id)
@@ -150,6 +149,6 @@ def main():
         for track in parser:
             domain.Song(track).save()
             do_commit()
-    
-main()
-print "DONE!"
+if __name__ == "__main__":
+    main()
+    print "DONE!"
