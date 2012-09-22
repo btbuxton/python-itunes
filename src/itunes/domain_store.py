@@ -24,7 +24,6 @@ class DomainStore(object):
         self.conn=sqlite3.connect(self.file_name)
         self.curs = self.conn.cursor()
         self.reset()
-        print "enter"
         domain.Domain.register_store(self)
         return self
         
