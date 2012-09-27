@@ -28,7 +28,7 @@ _VALUE_CONVERTER={
 
 class PlistIter:
     def __init__(self,stream):
-        self.parser = pulldom.parse(stream)
+        self._parser = pulldom.parse(stream)
     
     def __iter__(self):
         return self
@@ -39,7 +39,7 @@ class PlistIter:
         raise StopIteration
     
     def next_event(self):
-        for element in self.parser:
+        for element in self._parser:
             if _IS_ELEMENT_START(element): 
                 if _IS_KEY(element):
                     return [KEY, self._parse_key()]
@@ -54,14 +54,17 @@ class PlistIter:
         return None
                     
     def _parse_key(self):
-        name=self.parser.next()[1].nodeValue
+        name=self._parser.next()[1].nodeValue
         self._eat_till_end()
         return name
     
     def _parse_simple_value(self, kind):
-        value=_VALUE_CONVERTER[kind](self.parser.next()[1].nodeValue)
-        self._eat_till_end()
+        next=self._parser.next()
+        value=_VALUE_CONVERTER[kind](next[1].nodeValue)
+        if not _IS_ELEMENT_END(next): self._eat_till_end()
         return value
     
     def _eat_till_end(self):
-        while not _IS_ELEMENT_END(self.parser.next()): pass
+        while True:
+            next = self._parser.next()
+            if _IS_ELEMENT_END(next): break

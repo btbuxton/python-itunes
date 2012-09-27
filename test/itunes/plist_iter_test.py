@@ -20,6 +20,7 @@ class Test(unittest.TestCase):
             [VALUE, '10.7'],
             [KEY, 'Show Content Ratings'],
             [VALUE, True],
+            [KEY, 'Music Folder'],
             [VALUE, 'file://localhost/Users/btbuxton/Music/iTunes/iTunes%20Media/'],
             [KEY, 'Tracks'],
             [START_DICT, None],
