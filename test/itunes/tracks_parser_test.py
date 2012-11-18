@@ -12,9 +12,12 @@ class Test(unittest.TestCase):
 
     def test_all(self):
         stream = self.get_stream()
-        all = TracksParser(stream)
-        for track in all:
-            print track
+        all = iter(TracksParser(stream))
+        track = all.next()
+        self.assertEquals(70960, track.total_time)
+        track = all.next()
+        self.assertEquals(11, track.play_count)
+        
 
     def get_stream(self):
         return StringIO.StringIO('''
