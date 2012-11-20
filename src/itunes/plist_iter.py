@@ -59,9 +59,12 @@ class PlistIter:
         return name
     
     def _parse_simple_value(self, kind):
-        next=self._parser.next()
-        value=_VALUE_CONVERTER[kind](next[1].nodeValue)
-        if not _IS_ELEMENT_END(next): self._eat_till_end()
+        nodeValue = ''
+        while True:
+            next=self._parser.next()
+            if _IS_ELEMENT_END(next): break
+            nodeValue = nodeValue + next[1].nodeValue
+        value=_VALUE_CONVERTER[kind](nodeValue)
         return value
     
     def _eat_till_end(self):
