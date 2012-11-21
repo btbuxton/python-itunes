@@ -11,14 +11,14 @@ END_DICT = 'END_DICT'
 KEY = 'KEY'
 VALUE = 'VALUE'
 
-_IS_ELEMENT_START=lambda (elmt_type,node): elmt_type == pulldom.START_ELEMENT
-_IS_ELEMENT_END=lambda(elmt_type,node): elmt_type == pulldom.END_ELEMENT
-_IS_CHARACTERS=lambda (elmt_type,node): elmt_type == pulldom.CHARACTERS
-_IS_NAME=lambda name: lambda (elmt_type,node): node.nodeName == name
-_IS_KEY=_IS_NAME('key')
-_IS_DICT=_IS_NAME('dict')
+_IS_ELEMENT_START = lambda (elmt_type, node): elmt_type == pulldom.START_ELEMENT
+_IS_ELEMENT_END = lambda(elmt_type, node): elmt_type == pulldom.END_ELEMENT
+_IS_CHARACTERS = lambda (elmt_type, node): elmt_type == pulldom.CHARACTERS
+_IS_NAME = lambda name: lambda (elmt_type, node): node.nodeName == name
+_IS_KEY = _IS_NAME('key')
+_IS_DICT = _IS_NAME('dict')
 
-_VALUE_CONVERTER={
+_VALUE_CONVERTER = {
     'integer': lambda value: int(value),
     'string': lambda value: value,
     'date': lambda value: time.strptime(value, '%Y-%m-%dT%H:%M:%SZ'),
@@ -27,7 +27,7 @@ _VALUE_CONVERTER={
 }
 
 class PlistIter:
-    def __init__(self,stream):
+    def __init__(self, stream):
         self._parser = pulldom.parse(stream)
     
     def __iter__(self):
@@ -54,20 +54,20 @@ class PlistIter:
         return None
                     
     def _parse_key(self):
-        name=self._parser.next()[1].nodeValue
+        name = self._parser.next()[1].nodeValue
         self._eat_till_end()
         return name
     
     def _parse_simple_value(self, kind):
         nodeValue = ''
         while True:
-            next=self._parser.next()
-            if _IS_ELEMENT_END(next): break
-            nodeValue = nodeValue + next[1].nodeValue
-        value=_VALUE_CONVERTER[kind](nodeValue)
+            next_item = self._parser.next()
+            if _IS_ELEMENT_END(next_item): break
+            nodeValue = nodeValue + next_item[1].nodeValue
+        value = _VALUE_CONVERTER[kind](nodeValue)
         return value
     
     def _eat_till_end(self):
         while True:
-            next = self._parser.next()
-            if _IS_ELEMENT_END(next): break
+            next_item = self._parser.next()
+            if _IS_ELEMENT_END(next_item): break

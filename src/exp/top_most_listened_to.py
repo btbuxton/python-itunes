@@ -3,7 +3,6 @@ Created on Nov 18, 2012
 
 @author: btbuxton
 '''
-import os
 import os.path
 
 from xml.dom.minidom import getDOMImplementation

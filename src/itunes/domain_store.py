@@ -9,10 +9,10 @@ import itunes.domain as domain
 
 class DomainStore(object):
     mapping = {
-        domain.Genre: lambda store,object: store.save_genre(object),
-        domain.Artist: lambda store,object: store.save_artist(object),
-        domain.Album: lambda store,object: store.save_album(object),
-        domain.Song: lambda store,object: store.save_song(object)
+        domain.Genre: lambda store,obj: store.save_genre(obj),
+        domain.Artist: lambda store,obj: store.save_artist(obj),
+        domain.Album: lambda store,obj: store.save_album(obj),
+        domain.Song: lambda store,obj: store.save_song(obj)
     }
     def __init__(self, file_name=None):
         if file_name is None:
@@ -47,29 +47,29 @@ class DomainStore(object):
         self.conn.commit()
         self.reset()
         
-    def save(self, object):
-        if hasattr(object, "store_id"):
+    def save(self, obj):
+        if hasattr(obj, "store_id"):
             print "gotcha!"
-        self.to_save.append(object)
+        self.to_save.append(obj)
         
-    def store_to_db(self, object):
+    def store_to_db(self, obj):
         try:
-            self.mapping[object.__class__](self, object)
+            self.mapping[obj.__class__](self, obj)
         except KeyError:
             pass
         
-    def save_genre(self, object):
-        self.curs.execute('insert into genre(name) values (?)', (object.name,))
-        object.store_id=self.curs.lastrowid
-    def save_artist(self, object):
-        self.curs.execute('insert into artist(genre_id,name) values (?,?)', (object.genre.store_id,object.name))
-        object.store_id=self.curs.lastrowid
-    def save_album(self, object):
-        self.curs.execute('insert into album(artist_id,name,year) values (?,?,?)', (object.artist.store_id,object.name,object.year))
-        object.store_id=self.curs.lastrowid
-    def save_song(self, object):
-        self.curs.execute('insert into song(itunes_id, album_id, disc_number, last_played, play_count, title, total_time, track_number) values (?,?,?,?,?,?,?,?)', (object.itunes_id,object.album.store_id,object.disc_number,object.last_played, object.play_count,object.title,object.total_time,object.track_number))
-        object.store_id=self.curs.lastrowid
+    def save_genre(self, obj):
+        self.curs.execute('insert into genre(name) values (?)', (obj.name,))
+        obj.store_id=self.curs.lastrowid
+    def save_artist(self, obj):
+        self.curs.execute('insert into artist(genre_id,name) values (?,?)', (obj.genre.store_id,obj.name))
+        obj.store_id=self.curs.lastrowid
+    def save_album(self, obj):
+        self.curs.execute('insert into album(artist_id,name,year) values (?,?,?)', (obj.artist.store_id,obj.name,obj.year))
+        obj.store_id=self.curs.lastrowid
+    def save_song(self, obj):
+        self.curs.execute('insert into song(itunes_id, album_id, disc_number, last_played, play_count, title, total_time, track_number) values (?,?,?,?,?,?,?,?)', (obj.itunes_id,obj.album.store_id,obj.disc_number,obj.last_played, obj.play_count,obj.title,obj.total_time,obj.track_number))
+        obj.store_id=self.curs.lastrowid
     
 
         

@@ -6,17 +6,17 @@ Created on Feb 19, 2010
 import itunes.plist_iter as plist_iter
 import itunes.domain as domain
 import itunes.domain_store as store
-import time
 import os
 
-from itunes.common import PreviousIterator, print_timing, func_and, every_do
+from itunes.common import print_timing, every_do
 
 _IS_END_DICT = lambda (elmt_type, value): elmt_type == plist_iter.END_DICT
 _IS_KEY = lambda (elmt_type, value): elmt_type == plist_iter.KEY
 _IS_TRACKS = lambda (elmt_type, value): _IS_KEY([elmt_type,value]) and value == 'Tracks'
 
 class Track(object):
-    def __init__(self, id):
+    def __init__(self, track_id):
+        self.track_id = track_id
         self.album_name = None
         self.album_artist_name = None
         self.artist_name = None
@@ -69,7 +69,6 @@ class TracksParser(object):
                 track = Track(id)
                 next_key = None
                 while True:
-                    prev_key = next_key
                     next_key = self._plist_iter.next()
                     if _IS_END_DICT(next_key): break
                     key = next_key[1]
@@ -85,19 +84,6 @@ class TracksParser(object):
     
     def __iter__(self):
         return self._next_track()
-            
-    def _get_track(self, parser, id):
-        track = Track(id)
-        while True:
-            key = self._get_key(parser)
-            if key is None: break
-            value = self._get_value(parser)
-            if value is None: break
-            try:
-                setattr(track, self.track_mapping[key], value)
-            except KeyError:
-                pass
-        return track
 
 @print_timing
 def main():
